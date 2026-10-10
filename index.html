@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoK Companion: Commander Codex & Event Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #0b1120; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+    .card { background-color: #1e293b; border: 1px solid #334155; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .gold-glow { box-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
+    .rarity-legendary { border-color: #f59e0b; }
+    .rarity-epic { border-color: #a855f7; }
+    .rarity-elite { border-color: #3b82f6; }
+    .rarity-advanced { border-color: #22c55e; }
+  </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 pb-20">
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-slate-800 gap-3">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-amber-400 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved"></i> RoK Companion Studio
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">Universal Sculptures calculator, comprehensive events timeline & commander codex</p>
+      </div>
+      <button onclick="resetAllData()" class="text-xs bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/60 px-3 py-1.5 rounded transition">
+        <i class="fa-solid fa-rotate-left mr-1"></i> Reset Stored Data
+      </button>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="flex overflow-x-auto border-b border-slate-800 text-sm font-semibold gap-2 pb-0.5">
+      <button id="tabPlannerBtn" onclick="switchTab('planner')" class="px-4 py-2.5 border-b-2 border-amber-400 text-amber-400 transition flex items-center gap-2 shrink-0">
+        <i class="fa-solid fa-crown"></i> Head Calculator
+      </button>
+      <button id="tabCodexBtn" onclick="switchTab('codex')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
+        <i class="fa-solid fa-users-viewfinder"></i> Commander Codex
+      </button>
+      <button id="tabEventsBtn" onclick="switchTab('events')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
+        <i class="fa-solid fa-calendar-star"></i> Gold Head Events Directory
+      </button>
+      <button id="tabRssBtn" onclick="switchTab('rss')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
+        <i class="fa-solid fa-boxes-stacked"></i> Resource Reserve
+      </button>
+    </div>
+
+    <!-- 1. HEAD CALCULATOR & ACTIVE EVENT SIMULATOR TAB -->
+    <section id="plannerTab" class="space-y-6">
+      <div class="card p-5 rounded-xl shadow-xl space-y-6">
+        
+        <!-- Active Selected Commander Banner -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 bg-slate-900/90 rounded-lg border border-slate-700/80 gap-3">
+          <div class="flex items-center gap-3">
+            <img id="activeCmdImg" src="https://static.wikia.nocookie.net/riseofkingdoms/images/7/7b/Alexander_the_Great_portrait.png" onerror="this.src='https://placehold.co/80x80/1e293b/amber400?text=Commander'" class="w-12 h-12 rounded-full border-2 border-amber-400 object-cover bg-slate-800">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Target Commander</span>
+              <h3 id="activeCmdName" class="text-base font-bold text-slate-100">Alexander the Great</h3>
+              <p id="activeCmdType" class="text-[11px] text-slate-400">Legendary • Infantry / Conquering / Attack</p>
+            </div>
+          </div>
+          <button onclick="switchTab('codex')" class="text-xs bg-slate-800 border border-slate-600 hover:border-amber-400 px-3 py-1.5 rounded-lg text-slate-200 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-repeat text-amber-400"></i> Change Commander
+          </button>
+        </div>
+
+        <!-- Skill Pickers -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+            <span class="text-xs font-semibold text-slate-400 block mb-3">CURRENT SKILL SETTING</span>
+            <div class="grid grid-cols-4 gap-2">
+              <div><label class="text-[10px] text-slate-400">Skill 1</label><select id="curS1" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-amber-400"></select></div>
+              <div><label class="text-[10px] text-slate-400">Skill 2</label><select id="curS2" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-amber-400"></select></div>
+              <div><label class="text-[10px] text-slate-400">Skill 3</label><select id="curS3" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-amber-400"></select></div>
+              <div><label class="text-[10px] text-slate-400">Skill 4</label><select id="curS4" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-amber-400"></select></div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+            <span class="text-xs font-semibold text-slate-400 block mb-3">TARGET GOAL SKILL SETTING</span>
+            <div class="grid grid-cols-4 gap-2">
+              <div><label class="text-[10px] text-slate-400">Skill 1</label><select id="tarS1" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-emerald-400"></select></div>
+              <div><label class="text-[10px] text-slate-400">Skill 2</label><select id="tarS2" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-emerald-400"></select></div>
+              <div><label class="text-[10px] text-slate-400">Skill 3</label><select id="tarS3" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-emerald-400"></select></div>
+              <div><label class="text-[10px] text-slate-400">Skill 4</label><select id="tarS4" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-center text-sm font-bold text-emerald-400"></select></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- In-Bag Universal Sculptures -->
+        <div class="bg-slate-900/40 p-4 rounded-lg border border-slate-700">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Universal Sculptures Currently In Bag</label>
+          <input type="number" id="inBagHeads" min="0" value="0" oninput="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2.5 text-sm text-amber-300 focus:outline-none focus:border-amber-400 font-bold">
+        </div>
+
+        <!-- Daily Accelerators Form -->
+        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
+            <span class="text-xs uppercase font-bold text-amber-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt"></i> Event Accelerators & Income Modifiers
+            </span>
+            <span id="effectiveRateBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 font-mono font-medium">
+              Rate: ~2.00 / day
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="text-slate-300 font-semibold block mb-1">Guaranteed VIP & Daily Bundle</label>
+              <select id="vipDaily" onchange="calcSculptures()" class="
