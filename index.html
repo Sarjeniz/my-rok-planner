@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoK Companion: Commander Codex & Event Planner</title>
+  <title>RoK Commander Expertise & Gold Head Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -15,57 +15,86 @@
     .rarity-epic { border-color: #a855f7; }
     .rarity-elite { border-color: #3b82f6; }
     .rarity-advanced { border-color: #22c55e; }
+    @keyframes pulse-gentle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .audio-pulsing { animation: pulse-gentle 2s infinite ease-in-out; }
   </style>
 </head>
 <body class="min-h-screen p-3 md:p-6 pb-20">
   <div class="max-w-6xl mx-auto space-y-6">
 
+    <!-- Background Music Audio Element (Royalty-free calm instrumental loop) -->
+    <audio id="bgMusic" loop preload="auto">
+      <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
     <!-- Header -->
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-slate-800 gap-3">
       <div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-amber-400 flex items-center gap-2">
-          <i class="fa-solid fa-shield-halved"></i> RoK Companion Studio
+          <i class="fa-solid fa-crown"></i> RoK Commander Expertise Studio
         </h1>
-        <p class="text-xs text-slate-400 mt-1">Universal Sculptures calculator, comprehensive events timeline & commander codex</p>
+        <p class="text-xs text-slate-400 mt-1">Live Google Sheets database, skill targets & gold head roadmap</p>
       </div>
-      <button onclick="resetAllData()" class="text-xs bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/60 px-3 py-1.5 rounded transition">
-        <i class="fa-solid fa-rotate-left mr-1"></i> Reset Stored Data
-      </button>
+
+      <!-- Action Buttons: Music Toggle + Reset -->
+      <div class="flex items-center gap-2">
+        <button id="musicToggleBtn" onclick="toggleAudio()" class="text-xs bg-amber-950/40 text-amber-300 border border-amber-600/50 hover:bg-amber-900/50 px-3 py-1.5 rounded-lg transition flex items-center gap-2">
+          <i id="musicIcon" class="fa-solid fa-music"></i>
+          <span id="musicText">Play Music</span>
+        </button>
+
+        <button onclick="resetAllData()" class="text-xs bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/60 px-3 py-1.5 rounded-lg transition">
+          <i class="fa-solid fa-rotate-left mr-1"></i> Reset Data
+        </button>
+      </div>
     </header>
 
     <!-- Navigation Tabs -->
     <div class="flex overflow-x-auto border-b border-slate-800 text-sm font-semibold gap-2 pb-0.5">
       <button id="tabPlannerBtn" onclick="switchTab('planner')" class="px-4 py-2.5 border-b-2 border-amber-400 text-amber-400 transition flex items-center gap-2 shrink-0">
-        <i class="fa-solid fa-crown"></i> Head Calculator
+        <i class="fa-solid fa-calculator"></i> Expertise Planner
       </button>
       <button id="tabCodexBtn" onclick="switchTab('codex')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
-        <i class="fa-solid fa-users-viewfinder"></i> Commander Codex
+        <i class="fa-solid fa-users-viewfinder"></i> Commander Database
       </button>
       <button id="tabEventsBtn" onclick="switchTab('events')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
-        <i class="fa-solid fa-calendar-star"></i> Gold Head Events Directory
-      </button>
-      <button id="tabRssBtn" onclick="switchTab('rss')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
-        <i class="fa-solid fa-boxes-stacked"></i> Resource Reserve
+        <i class="fa-solid fa-calendar-check"></i> Ways to Get Gold Heads
       </button>
     </div>
 
-    <!-- 1. HEAD CALCULATOR & ACTIVE EVENT SIMULATOR TAB -->
+    <!-- 1. EXPERTISE & EVENT ACCELERATOR PLANNER -->
     <section id="plannerTab" class="space-y-6">
       <div class="card p-5 rounded-xl shadow-xl space-y-6">
         
-        <!-- Active Selected Commander Banner -->
+        <!-- Active Commander Banner -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 bg-slate-900/90 rounded-lg border border-slate-700/80 gap-3">
           <div class="flex items-center gap-3">
-            <img id="activeCmdImg" src="https://static.wikia.nocookie.net/riseofkingdoms/images/7/7b/Alexander_the_Great_portrait.png" onerror="this.src='https://placehold.co/80x80/1e293b/amber400?text=Commander'" class="w-12 h-12 rounded-full border-2 border-amber-400 object-cover bg-slate-800">
+            <div id="activeCmdAvatarWrap" class="w-14 h-14 rounded-full border-2 border-amber-400 overflow-hidden bg-slate-800 flex items-center justify-center shrink-0">
+              <img id="activeCmdImg" src="" alt="Commander" class="w-full h-full object-cover">
+            </div>
             <div>
-              <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Target Commander</span>
-              <h3 id="activeCmdName" class="text-base font-bold text-slate-100">Alexander the Great</h3>
-              <p id="activeCmdType" class="text-[11px] text-slate-400">Legendary • Infantry / Attack</p>
+              <div class="flex items-center gap-2">
+                <span id="activeCmdRarity" class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-400/30">Legendary</span>
+                <span id="activeCmdEra" class="text-[10px] text-slate-400 font-mono"></span>
+              </div>
+              <h3 id="activeCmdName" class="text-base font-bold text-slate-100 mt-0.5">Select a Commander</h3>
+              <p id="activeCmdType" class="text-[11px] text-slate-400">Infantry / Attack</p>
             </div>
           </div>
           <button onclick="switchTab('codex')" class="text-xs bg-slate-800 border border-slate-600 hover:border-amber-400 px-3 py-1.5 rounded-lg text-slate-200 transition flex items-center gap-1.5">
-            <i class="fa-solid fa-repeat text-amber-400"></i> Change Commander
+            <i class="fa-solid fa-repeat text-amber-400"></i> Change from Codex
           </button>
+        </div>
+
+        <!-- Quick Presets -->
+        <div class="flex items-center gap-2 text-xs flex-wrap">
+          <span class="text-slate-400">Quick Skill Targets:</span>
+          <button onclick="applyPreset([5,1,1,1],[5,5,5,1])" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-slate-300">5-5-5-1 (380 heads)</button>
+          <button onclick="applyPreset([5,1,1,1],[5,5,5,5])" class="px-2.5 py-1 bg-amber-950/40 hover:bg-amber-900/40 border border-amber-700/60 rounded text-amber-300 font-semibold">Expertise 5-5-5-5 (690 heads)</button>
         </div>
 
         <!-- Skill Pickers -->
@@ -91,17 +120,17 @@
           </div>
         </div>
 
-        <!-- In-Bag Universal Sculptures -->
+        <!-- In-Bag Sculptures -->
         <div class="bg-slate-900/40 p-4 rounded-lg border border-slate-700">
           <label class="block text-xs font-semibold text-slate-300 mb-1">Universal Sculptures Currently In Bag</label>
           <input type="number" id="inBagHeads" min="0" value="0" oninput="calcSculptures()" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2.5 text-sm text-amber-300 focus:outline-none focus:border-amber-400 font-bold">
         </div>
 
-        <!-- Daily Accelerators Form -->
+        <!-- Event Accelerators -->
         <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-4">
           <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
             <span class="text-xs uppercase font-bold text-amber-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-bolt"></i> Event Accelerators & Income Modifiers
+              <i class="fa-solid fa-bolt"></i> Event Accelerators (Calculate Your True Acquisition Rate)
             </span>
             <span id="effectiveRateBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 font-mono font-medium">
               Rate: ~2.00 / day
@@ -110,12 +139,12 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div>
-              <label class="text-slate-300 font-semibold block mb-1">Guaranteed VIP & Daily Bundle</label>
+              <label class="text-slate-300 font-semibold block mb-1">Guaranteed VIP & Daily Chest</label>
               <select id="vipDaily" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
                 <option value="1">VIP 10–11 (1 Head/day)</option>
                 <option value="2" selected>VIP 12–13 (2 Heads/day)</option>
                 <option value="3">VIP 14+ (3 Heads/day)</option>
-                <option value="4">VIP 14+ with daily special bundle purchase (4 Heads/day)</option>
+                <option value="4">VIP 14+ with daily special bundle (4 Heads/day)</option>
               </select>
             </div>
 
@@ -131,8 +160,8 @@
             <div>
               <label class="text-slate-300 font-semibold block mb-1">Champions of Olympia (Weekly Shop)</label>
               <select id="olympiaParticipation" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
-                <option value="0">Skip Olympia Shop (0 Heads)</option>
-                <option value="0.29">Partial exchange (~2 heads / week)</option>
+                <option value="0">Skip Olympia (0 Heads)</option>
+                <option value="0.29">Casual exchange (~2 heads / week)</option>
                 <option value="0.71" selected>Full Clear (5 heads / week)</option>
               </select>
             </div>
@@ -140,39 +169,39 @@
             <div>
               <label class="text-slate-300 font-semibold block mb-1">More Than Gems (MTG) Every ~5 Weeks</label>
               <select id="mtgParticipation" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
-                <option value="0">Skip / Save gems</option>
-                <option value="0.29">7k + 7k tier (10 heads per cycle)</option>
-                <option value="0.74" selected>25k + 25k tier (26 heads per cycle)</option>
+                <option value="0">Skip MTG spending</option>
+                <option value="0.29">7k + 7k gems (10 heads per cycle)</option>
+                <option value="0.74" selected>25k + 25k gems (26 heads per cycle)</option>
               </select>
             </div>
 
             <div>
-              <label class="text-slate-300 font-semibold block mb-1">7k Gem Holiday Board (35 Heads / event)</label>
+              <label class="text-slate-300 font-semibold block mb-1">7k Gem Holiday Progression Board</label>
               <select id="holiday7kParticipation" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
                 <option value="0">Do not complete</option>
-                <option value="0.39" selected>Complete every major season (~35 heads / 90d)</option>
+                <option value="0.39" selected>Complete every major seasonal event (35 heads)</option>
               </select>
             </div>
 
             <div>
-              <label class="text-slate-300 font-semibold block mb-1">Other Recurring (Golden Kingdom, MGE & Quests)</label>
+              <label class="text-slate-300 font-semibold block mb-1">Golden Kingdom, Karis & MGE Milestones</label>
               <select id="eventsPace" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
                 <option value="0">Ignore casual events</option>
-                <option value="0.30">Casual clears (~9 heads / month)</option>
-                <option value="0.60" selected>Active floor clears & milestone chests (~18 heads / month)</option>
+                <option value="0.30">Moderate participation (~9 heads / month)</option>
+                <option value="0.60" selected>Active clear of dungeons & milestones (~18 heads / month)</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- Calculated Metrics Outputs -->
+        <!-- Calculated Metrics Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-slate-900/90 p-4 rounded-lg border border-slate-700/80">
-            <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Target Cost</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Target Sculptures</span>
             <div id="outTotalNeeded" class="text-2xl font-bold text-slate-100 mt-1">0</div>
           </div>
           <div class="bg-slate-900/90 p-4 rounded-lg border border-slate-700/80">
-            <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Remaining Deficit</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Still Needed</span>
             <div id="outRemaining" class="text-2xl font-bold text-amber-400 mt-1">0</div>
           </div>
           <div class="bg-slate-900/90 p-4 rounded-lg border border-slate-700/80">
@@ -196,27 +225,37 @@
       </div>
     </section>
 
-    <!-- 2. COMMANDER CODEX TAB -->
+    <!-- 2. COMMANDER DATABASE CODEX TAB -->
     <section id="codexTab" class="hidden space-y-4">
       <div class="card p-5 rounded-xl shadow-xl space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
           <div>
-            <h2 class="text-lg font-bold text-slate-100">Commander Roster Codex</h2>
-            <p class="text-xs text-slate-400">Click any commander to set them as your active calculator target.</p>
+            <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <i class="fa-solid fa-table text-emerald-400"></i> Connected Google Sheets Codex
+            </h2>
+            <p class="text-xs text-slate-400">Live data directly from your linked spreadsheet. Select any card to plan expertise.</p>
           </div>
-          <!-- Filter pills -->
-          <div class="flex flex-wrap gap-1.5 text-xs">
-            <button onclick="filterCodex('all')" class="codex-flt active bg-slate-700 text-white px-2.5 py-1 rounded">All</button>
-            <button onclick="filterCodex('legendary')" class="codex-flt bg-slate-800 text-amber-400 px-2.5 py-1 rounded hover:bg-slate-700">Legendary</button>
-            <button onclick="filterCodex('epic')" class="codex-flt bg-slate-800 text-purple-400 px-2.5 py-1 rounded hover:bg-slate-700">Epic</button>
-            <button onclick="filterCodex('elite')" class="codex-flt bg-slate-800 text-blue-400 px-2.5 py-1 rounded hover:bg-slate-700">Elite</button>
-            <button onclick="filterCodex('advanced')" class="codex-flt bg-slate-800 text-emerald-400 px-2.5 py-1 rounded hover:bg-slate-700">Advanced</button>
+          
+          <!-- Search input -->
+          <div class="relative w-full md:w-64">
+            <input type="text" id="codexSearch" oninput="filterAndSearchCodex()" placeholder="Search commander or generation..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400 pl-8">
+            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
           </div>
+        </div>
+
+        <!-- Filter pills -->
+        <div class="flex flex-wrap gap-1.5 text-xs">
+          <button onclick="setFilterRarity('all')" class="codex-flt active bg-slate-700 text-white px-2.5 py-1 rounded">All</button>
+          <button onclick="setFilterRarity('legendary')" class="codex-flt bg-slate-800 text-amber-400 px-2.5 py-1 rounded hover:bg-slate-700">Legendary</button>
+          <button onclick="setFilterRarity('epic')" class="codex-flt bg-slate-800 text-purple-400 px-2.5 py-1 rounded hover:bg-slate-700">Epic</button>
+          <button onclick="setFilterRarity('elite')" class="codex-flt bg-slate-800 text-blue-400 px-2.5 py-1 rounded hover:bg-slate-700">Elite</button>
+          <button onclick="setFilterRarity('advanced')" class="codex-flt bg-slate-800 text-emerald-400 px-2.5 py-1 rounded hover:bg-slate-700">Advanced</button>
         </div>
 
         <!-- Grid Container -->
         <div id="commandersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-2">
-          <!-- Rendered via JavaScript -->
+          <!-- Loaded live from Google Sheet -->
         </div>
       </div>
     </section>
@@ -226,9 +265,9 @@
       <div class="card p-5 rounded-xl shadow-xl space-y-6">
         <div>
           <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
-            <i class="fa-solid fa-gem text-amber-400"></i> Complete Gold Head Events Directory
+            <i class="fa-solid fa-gem text-amber-400"></i> Ways to Get Universal Gold Heads
           </h2>
-          <p class="text-xs text-slate-400">Full inventory of in-game events yielding Universal Gold Heads and commander sculptures.</p>
+          <p class="text-xs text-slate-400">Reference inventory of events offering Universal Gold Heads & sculptures.</p>
         </div>
 
         <!-- Gem-spending Section -->
@@ -239,27 +278,27 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">More Than Gems (MTG)</span>
-              <p class="text-slate-400 mt-1">Occurs every 4 to 6 weeks over 2 days. Spending 25,000 gems per day (50k gems total) yields <strong class="text-amber-400">26 Universal Gold Heads</strong> (13 per day: 5 at the 7k tier, 8 at the 25k tier).</p>
+              <p class="text-slate-400 mt-1">Occurs every 4 to 6 weeks over 2 days. Spending 25,000 gems per day (50k gems total) yields <strong class="text-amber-400">26 Universal Gold Heads</strong> (13 per day: 5 at 7k tier, 8 at 25k tier).</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">7k Gem Seasonal Events (Holiday Board)</span>
-              <p class="text-slate-400 mt-1">Major holidays (Anniversary, Spring Festival, Halloween). Unlocking the 7,000 gem path and reaching Level 25 yields <strong class="text-amber-400">35 Gold Heads</strong> while fully refunding your 7,000 gems.</p>
+              <p class="text-slate-400 mt-1">Holiday seasons (Anniversary, Spring Festival, Halloween). Unlocking the 7,000 gem path and clearing Level 25 gives <strong class="text-amber-400">35 Gold Heads</strong> while fully refunding the 7,000 gems.</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">Wheel of Fortune</span>
-              <p class="text-slate-400 mt-1">Spinning gives featured commander heads directly plus guaranteed milestone chests (10, 25, 45, 70, and 100 spins) that grant Universal and Commander heads.</p>
+              <p class="text-slate-400 mt-1">Spinning gives featured commander heads directly plus guaranteed milestone chests at 10, 25, 45, 70, and 100 spins.</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">Card King</span>
-              <p class="text-slate-400 mt-1">Allows using gems to selectively unlock past legendary commanders without relying entirely on Wheel rotations or Golden Chests.</p>
+              <p class="text-slate-400 mt-1">Use gems to selectively flip cards and unlock past legendary commanders without waiting for Wheel rotations.</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">Recharge Rewards (Gem Rush)</span>
-              <p class="text-slate-400 mt-1">Purchasing ~2,500 gems daily across 5 consecutive event days unlocks progression tiers rewarding up to <strong class="text-amber-400">30–40 Universal Gold Heads</strong>.</p>
+              <p class="text-slate-400 mt-1">Purchasing 2,500 gems daily across 5 consecutive event days unlocks progression tiers rewarding up to <strong class="text-amber-400">30–40 Gold Heads</strong>.</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
-              <span class="font-bold text-slate-200 block text-sm">Holiday Exchange Shops & Commander Reset</span>
-              <p class="text-slate-400 mt-1">Buy leftover festival currencies with gems (~1k gem equivalent per head) or reset unused expertised commanders (100 gems per sculpture refunded up to 69k gems).</p>
+              <span class="font-bold text-slate-200 block text-sm">Commander Reset & Holiday Shops</span>
+              <p class="text-slate-400 mt-1">Reset retired commanders (100 gems per head refunded up to 69k gems) or purchase remaining festival shop currencies.</p>
             </div>
           </div>
         </div>
@@ -272,156 +311,64 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">Ark of Osiris (AOO)</span>
-              <p class="text-slate-400 mt-1">Every two weeks. Hitting 10,000 personal points yields <strong class="text-amber-400">10 Gold Heads</strong> for a team win and <strong class="text-amber-400">5 Gold Heads</strong> for a loss.</p>
+              <p class="text-slate-400 mt-1">Every two weeks. Hitting 10,000 personal score yields <strong class="text-amber-400">10 Gold Heads</strong> for a win and <strong class="text-amber-400">5 Gold Heads</strong> for a loss.</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">Champions of Olympia</span>
-              <p class="text-slate-400 mt-1">Weekly 5v5 battle mode. Ranking up awards shop coins to redeem up to <strong class="text-amber-400">5 Legendary Sculptures per week</strong> (260 heads/year).</p>
+              <p class="text-slate-400 mt-1">Weekly 5v5 battle mode. Redeem up to <strong class="text-amber-400">5 Legendary Sculptures per week</strong> from the Olympia shop (260 heads/year).</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">The Golden Kingdom</span>
-              <p class="text-slate-400 mt-1">Bi-weekly dungeon crawl mode. Clearing Floor 4 and final bosses awards guaranteed Universal Sculptures from clear chests.</p>
+              <p class="text-slate-400 mt-1">Bi-weekly dungeon mode. Clearing floors and defeating guardians grants guaranteed Universal Sculptures from clear chests.</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
-              <span class="font-bold text-slate-200 block text-sm">Mightiest Governor (MGE) & 20-Head Power Ups</span>
-              <p class="text-slate-400 mt-1">Kingdom-wide 6-stage events or Lord of War/Game of Power. High rankings grant up to 20 Universal or specialized featured commander heads.</p>
+              <span class="font-bold text-slate-200 block text-sm">Mightiest Governor & Power Up Events</span>
+              <p class="text-slate-400 mt-1">Kingdom-wide competitions (Game of Power / Lord of War). Top placements grant up to 20 Universal or specialized heads.</p>
             </div>
           </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- 4. RESOURCE TOKENS TAB -->
-    <section id="rssTab" class="hidden space-y-4">
-      <div class="card p-5 rounded-xl shadow-lg space-y-4">
-        <div>
-          <h2 class="text-base font-semibold text-slate-200">Bag Inventory Calculator</h2>
-          <p class="text-xs text-slate-400">Log token counts in your inventory to see your ready reserves.</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <!-- Food -->
-          <div class="bg-slate-900/60 p-3.5 rounded-lg border border-amber-900/40 space-y-2">
-            <div class="flex items-center justify-between text-amber-300 text-sm font-semibold">
-              <span><i class="fa-solid fa-wheat-awn mr-1"></i> Food</span>
-              <span id="totFood" class="text-xs text-slate-300">0</span>
-            </div>
-            <div class="space-y-1 text-xs">
-              <div class="flex items-center justify-between"><span>10k:</span><input type="number" data-rss="food" data-mult="10000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>50k:</span><input type="number" data-rss="food" data-mult="50000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>150k:</span><input type="number" data-rss="food" data-mult="150000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>500k:</span><input type="number" data-rss="food" data-mult="500000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>1.5M:</span><input type="number" data-rss="food" data-mult="1500000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>5M:</span><input type="number" data-rss="food" data-mult="5000000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-            </div>
-          </div>
-
-          <!-- Wood -->
-          <div class="bg-slate-900/60 p-3.5 rounded-lg border border-emerald-900/40 space-y-2">
-            <div class="flex items-center justify-between text-emerald-300 text-sm font-semibold">
-              <span><i class="fa-solid fa-tree mr-1"></i> Wood</span>
-              <span id="totWood" class="text-xs text-slate-300">0</span>
-            </div>
-            <div class="space-y-1 text-xs">
-              <div class="flex items-center justify-between"><span>10k:</span><input type="number" data-rss="wood" data-mult="10000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>50k:</span><input type="number" data-rss="wood" data-mult="50000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>150k:</span><input type="number" data-rss="wood" data-mult="150000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>500k:</span><input type="number" data-rss="wood" data-mult="500000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>1.5M:</span><input type="number" data-rss="wood" data-mult="1500000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>5M:</span><input type="number" data-rss="wood" data-mult="5000000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-            </div>
-          </div>
-
-          <!-- Stone -->
-          <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-700 space-y-2">
-            <div class="flex items-center justify-between text-slate-300 text-sm font-semibold">
-              <span><i class="fa-solid fa-gem mr-1"></i> Stone</span>
-              <span id="totStone" class="text-xs text-slate-300">0</span>
-            </div>
-            <div class="space-y-1 text-xs">
-              <div class="flex items-center justify-between"><span>7.5k:</span><input type="number" data-rss="stone" data-mult="7500" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>37.5k:</span><input type="number" data-rss="stone" data-mult="37500" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>112.5k:</span><input type="number" data-rss="stone" data-mult="112500" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>375k:</span><input type="number" data-rss="stone" data-mult="375000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>1.125M:</span><input type="number" data-rss="stone" data-mult="1125000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>3.75M:</span><input type="number" data-rss="stone" data-mult="3750000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-            </div>
-          </div>
-
-          <!-- Gold -->
-          <div class="bg-slate-900/60 p-3.5 rounded-lg border border-yellow-900/40 space-y-2">
-            <div class="flex items-center justify-between text-yellow-400 text-sm font-semibold">
-              <span><i class="fa-solid fa-coins mr-1"></i> Gold</span>
-              <span id="totGold" class="text-xs text-slate-300">0</span>
-            </div>
-            <div class="space-y-1 text-xs">
-              <div class="flex items-center justify-between"><span>3k:</span><input type="number" data-rss="gold" data-mult="3000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>15k:</span><input type="number" data-rss="gold" data-mult="15000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>45k:</span><input type="number" data-rss="gold" data-mult="45000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>150k:</span><input type="number" data-rss="gold" data-mult="150000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>450k:</span><input type="number" data-rss="gold" data-mult="450000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-              <div class="flex items-center justify-between"><span>1.5M:</span><input type="number" data-rss="gold" data-mult="1500000" class="rss-in w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-right"></div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
   </div>
 
   <script>
-    // Exact RoK 16 skill upgrade costs for legendary commanders (total 690)
     const UPGRADE_COSTS = [10, 10, 15, 15, 30, 30, 40, 40, 45, 45, 50, 50, 75, 75, 80, 80];
 
-    // Master Commander Database
-    const COMMANDERS = [
-      // Legendary
-      { name: "Alexander the Great", rarity: "legendary", type: "Infantry / Attack", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/7/7b/Alexander_the_Great_portrait.png" },
-      { name: "Yi Seong-Gye (YSG)", rarity: "legendary", type: "Archer / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/f/f3/Yi_Seong-Gye_portrait.png" },
-      { name: "Richard I", rarity: "legendary", type: "Infantry / Defense", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/5/52/Richard_I_portrait.png" },
-      { name: "Charles Martel", rarity: "legendary", type: "Infantry / Defense", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/1/1a/Charles_Martel_portrait.png" },
-      { name: "Guan Yu", rarity: "legendary", type: "Infantry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/5/5c/Guan_Yu_portrait.png" },
-      { name: "Scipio Africanus Prime", rarity: "legendary", type: "Infantry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/6/6f/Scipio_Africanus_Prime_portrait.png" },
-      { name: "Boudica Prime", rarity: "legendary", type: "Archer / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/8/87/Boudica_Prime_portrait.png" },
-      { name: "Nevsky", rarity: "legendary", type: "Cavalry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/a/a4/Alexander_Nevsky_portrait.png" },
-      { name: "Joan of Arc Prime", rarity: "legendary", type: "Cavalry / Support", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/5/5f/Joan_of_Arc_Prime_portrait.png" },
-      { name: "Minamoto no Yoshitsune", rarity: "legendary", type: "Cavalry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/0/07/Minamoto_no_Yoshitsune_portrait.png" },
-      { name: "Cao Cao", rarity: "legendary", type: "Cavalry / Mobility", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/f/fa/Cao_Cao_portrait.png" },
-      { name: "Saladin", rarity: "legendary", type: "Cavalry / Support", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/d/df/Saladin_portrait.png" },
-      { name: "Edward of Woodstock", rarity: "legendary", type: "Archer / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/8/80/Edward_of_Woodstock_portrait.png" },
-      { name: "Aethelflaed", rarity: "legendary", type: "Peacekeeping / Support", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/9/91/Aethelflaed_portrait.png" },
-      { name: "Julius Caesar", rarity: "legendary", type: "Leadership / Attack", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/0/02/Julius_Caesar_portrait.png" },
-      { name: "Mehmed II", rarity: "legendary", type: "Leadership / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/e/e0/Mehmed_II_portrait.png" },
+    // Your prepared Google Sheet ID and Tab Name
+    const GOOGLE_SHEET_ID = '1o_EB9MoSUwQkt3h3-jQl7zPOiOB43GnrudC_2ClRrXk';
+    const SHEET_TAB_NAME = 'Sheet1'; 
 
-      // Epic
-      { name: "Sun Tzu", rarity: "epic", type: "Infantry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/e/e4/Sun_Tzu_portrait.png" },
-      { name: "Joan of Arc", rarity: "epic", type: "Support / Gathering", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/2/2c/Joan_of_Arc_portrait.png" },
-      { name: "Pelagius", rarity: "epic", type: "Cavalry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/2/27/Pelagius_portrait.png" },
-      { name: "Baibars", rarity: "epic", type: "Cavalry / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/1/12/Baibars_portrait.png" },
-      { name: "Boudica", rarity: "epic", type: "Peacekeeping / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/e/e3/Boudica_portrait.png" },
-      { name: "Hermann", rarity: "epic", type: "Archer / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/a/ab/Hermann_portrait.png" },
-      { name: "Eulji Mundeok", rarity: "epic", type: "Infantry / Attack", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/b/b3/Eulji_Mundeok_portrait.png" },
-      { name: "Scipio Africanus", rarity: "epic", type: "Leadership / Attack", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/7/7b/Scipio_Africanus_portrait.png" },
-      { name: "Belisarius", rarity: "epic", type: "Cavalry / Mobility", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/1/15/Belisarius_portrait.png" },
-      { name: "Kusunoki Masashige", rarity: "epic", type: "Archer / Skill", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/c/c5/Kusunoki_Masashige_portrait.png" },
-      { name: "Lohar", rarity: "epic", type: "Peacekeeping / Support", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/e/e5/Lohar_portrait.png" },
+    let COMMANDERS = [];
+    let currentSelectedCommander = null;
+    let activeRarityFilter = 'all';
 
-      // Elite
-      { name: "Constance", rarity: "elite", type: "Gathering", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/8/87/Constance_portrait.png" },
-      { name: "Gaius Marius", rarity: "elite", type: "Gathering", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/8/81/Gaius_Marius_portrait.png" },
-      { name: "Sarka", rarity: "elite", type: "Gathering", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/d/df/Sarka_portrait.png" },
-      { name: "Tomoe Gozen", rarity: "elite", type: "Archer / Support", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/b/be/Tomoe_Gozen_portrait.png" },
-      { name: "Lancelot", rarity: "elite", type: "Cavalry / Mobility", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/f/fe/Lancelot_portrait.png" },
+    // Audio Background Player Controller
+    const audio = document.getElementById('bgMusic');
+    const musicToggleBtn = document.getElementById('musicToggleBtn');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicText = document.getElementById('musicText');
+    let isPlaying = false;
 
-      // Advanced
-      { name: "Centurion", rarity: "advanced", type: "Gathering", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/4/4b/Centurion_portrait.png" },
-      { name: "City Keeper", rarity: "advanced", type: "Defense", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/7/79/City_Keeper_portrait.png" },
-      { name: "Dragon Lancer", rarity: "advanced", type: "Cavalry", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/6/63/Dragon_Lancer_portrait.png" },
-      { name: "Markswoman", rarity: "advanced", type: "Archer", img: "https://static.wikia.nocookie.net/riseofkingdoms/images/a/ab/Markswoman_portrait.png" }
-    ];
-
-    let currentSelectedCommander = COMMANDERS[0];
+    function toggleAudio() {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        musicIcon.className = "fa-solid fa-music";
+        musicText.textContent = "Play Music";
+        musicToggleBtn.classList.remove('bg-amber-500/20', 'border-amber-400', 'audio-pulsing');
+      } else {
+        audio.play().then(() => {
+          isPlaying = true;
+          musicIcon.className = "fa-solid fa-pause";
+          musicText.textContent = "Pause Music";
+          musicToggleBtn.classList.add('bg-amber-500/20', 'border-amber-400', 'audio-pulsing');
+        }).catch(err => {
+          console.warn("Audio autoplay blocked by browser policy until interaction.", err);
+        });
+      }
+    }
 
     function initSelects() {
       ['curS1', 'curS2', 'curS3', 'curS4', 'tarS1', 'tarS2', 'tarS3', 'tarS4'].forEach(id => {
@@ -438,13 +385,11 @@
       document.getElementById('tarS4').value = "5";
     }
 
-    // Direct, explicit tab switching logic
     function switchTab(tabName) {
       const tabs = {
         planner: { section: 'plannerTab', btn: 'tabPlannerBtn' },
         codex: { section: 'codexTab', btn: 'tabCodexBtn' },
-        events: { section: 'eventsTab', btn: 'tabEventsBtn' },
-        rss: { section: 'rssTab', btn: 'tabRssBtn' }
+        events: { section: 'eventsTab', btn: 'tabEventsBtn' }
       };
 
       Object.keys(tabs).forEach(key => {
@@ -467,27 +412,81 @@
       }
     }
 
-    function renderCodex(filter = 'all') {
+    // Live Google Sheets Importer
+    async function fetchCommanderDatabase() {
+      const grid = document.getElementById('commandersGrid');
+      grid.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Connecting to your Google Sheet database...</div>';
+
+      try {
+        const url = `https://opensheet.elk.sh/${GOOGLE_SHEET_ID}/${SHEET_TAB_NAME}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Network error loading sheet');
+        
+        const data = await res.json();
+        
+        if (Array.isArray(data) && data.length > 0) {
+          COMMANDERS = data.map(row => ({
+            name: row.name || 'Unnamed',
+            rarity: (row.rarity || 'legendary').toLowerCase().trim(),
+            type: row.type || 'Commander',
+            generation: row.generation || '',
+            img: row.img || ''
+          }));
+        } else {
+          throw new Error('No rows found in sheet');
+        }
+      } catch (err) {
+        console.warn("Using built-in fallbacks. Ensure Google Sheet sharing is set to 'Anyone with the link can view':", err);
+        COMMANDERS = [
+          { name: "Alexander the Great", rarity: "legendary", type: "Infantry / Attack", generation: "KvK 2", img: "" },
+          { name: "Scipio Africanus Prime", rarity: "legendary", type: "Infantry / Skill", generation: "Season of Conquest", img: "" },
+          { name: "Alexander Nevsky", rarity: "legendary", type: "Cavalry / Skill", generation: "Season of Conquest", img: "" },
+          { name: "Sun Tzu", rarity: "epic", type: "Infantry / Skill", generation: "Starting / Kingdom", img: "" }
+        ];
+      }
+
+      currentSelectedCommander = COMMANDERS[0];
+      selectCommander(COMMANDERS[0]);
+      renderCodex();
+      loadState();
+      calcSculptures();
+    }
+
+    function renderCodex() {
       const container = document.getElementById('commandersGrid');
       container.innerHTML = '';
+      const query = (document.getElementById('codexSearch')?.value || '').toLowerCase().trim();
 
-      const filtered = filter === 'all' ? COMMANDERS : COMMANDERS.filter(c => c.rarity === filter);
+      const filtered = COMMANDERS.filter(cmd => {
+        const matchesRarity = activeRarityFilter === 'all' || cmd.rarity === activeRarityFilter;
+        const matchesQuery = !query || cmd.name.toLowerCase().includes(query) || (cmd.generation && cmd.generation.toLowerCase().includes(query)) || cmd.type.toLowerCase().includes(query);
+        return matchesRarity && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-slate-500">No commanders found matching search.</div>';
+        return;
+      }
 
       filtered.forEach(cmd => {
         const borderClass = 'rarity-' + cmd.rarity;
         const card = document.createElement('div');
-        card.className = `bg-slate-900/80 border ${borderClass} rounded-xl p-2.5 flex flex-col items-center text-center cursor-pointer hover:bg-slate-800 transition duration-150`;
+        card.className = `bg-slate-900/80 border ${borderClass} rounded-xl p-2.5 flex flex-col items-center text-center cursor-pointer hover:bg-slate-800 hover:scale-[1.02] transition duration-150`;
         card.onclick = () => selectCommander(cmd);
+
+        const fallbackImg = `https://images.placeholders.dev/?width=100&height=100&text=${encodeURIComponent(cmd.name)}&bgColor=%231e293b&textColor=%23fbbf24`;
+        const initialImg = cmd.img && cmd.img.trim() !== '' ? cmd.img : fallbackImg;
 
         card.innerHTML = `
           <div class="relative w-16 h-16 mb-2">
-            <img src="${cmd.img}" alt="${cmd.name}" onerror="this.src='https://placehold.co/80x80/1e293b/amber400?text=${encodeURIComponent(cmd.name.charAt(0))}'" class="w-full h-full object-cover rounded-full border border-slate-700 bg-slate-800">
+            <img src="${initialImg}" alt="${cmd.name}" onerror="this.onerror=null;this.src='${fallbackImg}'" class="w-full h-full object-cover rounded-full border border-slate-700 bg-slate-800">
             <span class="absolute -bottom-1 -right-1 text-[9px] uppercase px-1.5 py-0.2 rounded font-bold ${getRarityTagClass(cmd.rarity)}">
               ${cmd.rarity.charAt(0).toUpperCase()}
             </span>
           </div>
           <h4 class="text-xs font-semibold text-slate-200 line-clamp-1 w-full">${cmd.name}</h4>
-          <p class="text-[10px] text-slate-400 mt-0.5 line-clamp-1">${cmd.type}</p>
+          <span class="text-[9px] text-amber-400 font-mono mt-0.5">${cmd.generation || ''}</span>
+          <p class="text-[10px] text-slate-400 line-clamp-1">${cmd.type}</p>
         `;
         container.appendChild(card);
       });
@@ -500,21 +499,40 @@
       return 'bg-emerald-600 text-white';
     }
 
-    function filterCodex(rarity) {
+    function setFilterRarity(rarity) {
+      activeRarityFilter = rarity;
       document.querySelectorAll('.codex-flt').forEach(b => {
         b.classList.remove('active', 'bg-slate-700', 'text-white');
       });
       event.target.classList.add('active', 'bg-slate-700', 'text-white');
-      renderCodex(rarity);
+      renderCodex();
+    }
+
+    function filterAndSearchCodex() {
+      renderCodex();
     }
 
     function selectCommander(cmd) {
+      if (!cmd) return;
       currentSelectedCommander = cmd;
       document.getElementById('activeCmdName').textContent = cmd.name;
-      document.getElementById('activeCmdType').textContent = `${cmd.rarity.toUpperCase()} • ${cmd.type}`;
-      document.getElementById('activeCmdImg').src = cmd.img;
+      document.getElementById('activeCmdType').textContent = `${cmd.type}`;
+      document.getElementById('activeCmdEra').textContent = cmd.generation || '';
+      document.getElementById('activeCmdRarity').textContent = cmd.rarity.toUpperCase();
+      
+      const fallbackImg = `https://images.placeholders.dev/?width=100&height=100&text=${encodeURIComponent(cmd.name)}&bgColor=%231e293b&textColor=%23fbbf24`;
+      const imgEl = document.getElementById('activeCmdImg');
+      imgEl.src = cmd.img && cmd.img.trim() !== '' ? cmd.img : fallbackImg;
+      imgEl.onerror = () => { imgEl.src = fallbackImg; };
+
       switchTab('planner');
       saveState();
+    }
+
+    function applyPreset(cur, tar) {
+      ['curS1', 'curS2', 'curS3', 'curS4'].forEach((id, i) => document.getElementById(id).value = cur[i]);
+      ['tarS1', 'tarS2', 'tarS3', 'tarS4'].forEach((id, i) => document.getElementById(id).value = tar[i]);
+      calcSculptures();
     }
 
     function getCumulativeCost(upgradesCompleted) {
@@ -545,7 +563,7 @@
 
       const inBag = parseInt(document.getElementById('inBagHeads').value) || 0;
 
-      // Event Accelerators math
+      // Accelerators math
       const vipBase = parseFloat(document.getElementById('vipDaily').value) || 1;
       const aooDaily = parseFloat(document.getElementById('aooPerformance').value) || 0;
       const olympiaDaily = parseFloat(document.getElementById('olympiaParticipation').value) || 0;
@@ -578,31 +596,8 @@
       saveState();
     }
 
-    function formatNumber(num) {
-      if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-      if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-      return num.toLocaleString();
-    }
-
-    function calcResources() {
-      const totals = { food: 0, wood: 0, stone: 0, gold: 0 };
-      document.querySelectorAll('.rss-in').forEach(input => {
-        const type = input.getAttribute('data-rss');
-        const mult = parseInt(input.getAttribute('data-mult'));
-        const val = parseInt(input.value) || 0;
-        totals[type] += (val * mult);
-      });
-
-      document.getElementById('totFood').textContent = formatNumber(totals.food);
-      document.getElementById('totWood').textContent = formatNumber(totals.wood);
-      document.getElementById('totStone').textContent = formatNumber(totals.stone);
-      document.getElementById('totGold').textContent = formatNumber(totals.gold);
-
-      saveState();
-    }
-
     function saveState() {
+      if (!currentSelectedCommander) return;
       const state = {
         cmdName: currentSelectedCommander.name,
         cur: [document.getElementById('curS1').value, document.getElementById('curS2').value, document.getElementById('curS3').value, document.getElementById('curS4').value],
@@ -613,35 +608,22 @@
         olympia: document.getElementById('olympiaParticipation').value,
         mtg: document.getElementById('mtgParticipation').value,
         holiday7k: document.getElementById('holiday7kParticipation').value,
-        events: document.getElementById('eventsPace').value,
-        rssInputs: {}
+        events: document.getElementById('eventsPace').value
       };
-      document.querySelectorAll('.rss-in').forEach((el, index) => {
-        state.rssInputs[index] = el.value;
-      });
-      localStorage.setItem('rok_companion_v3', JSON.stringify(state));
+      localStorage.setItem('rok_studio_v5', JSON.stringify(state));
     }
 
     function loadState() {
-      const raw = localStorage.getItem('rok_companion_v3');
+      const raw = localStorage.getItem('rok_studio_v5');
       if (!raw) return;
       try {
         const state = JSON.parse(raw);
-        if (state.cmdName) {
+        if (state.cmdName && COMMANDERS.length > 0) {
           const match = COMMANDERS.find(c => c.name === state.cmdName);
-          if (match) {
-            currentSelectedCommander = match;
-            document.getElementById('activeCmdName').textContent = match.name;
-            document.getElementById('activeCmdType').textContent = `${match.rarity.toUpperCase()} • ${match.type}`;
-            document.getElementById('activeCmdImg').src = match.img;
-          }
+          if (match) selectCommander(match);
         }
-        if (state.cur) {
-          ['curS1', 'curS2', 'curS3', 'curS4'].forEach((id, i) => document.getElementById(id).value = state.cur[i]);
-        }
-        if (state.tar) {
-          ['tarS1', 'tarS2', 'tarS3', 'tarS4'].forEach((id, i) => document.getElementById(id).value = state.tar[i]);
-        }
+        if (state.cur) ['curS1', 'curS2', 'curS3', 'curS4'].forEach((id, i) => document.getElementById(id).value = state.cur[i]);
+        if (state.tar) ['tarS1', 'tarS2', 'tarS3', 'tarS4'].forEach((id, i) => document.getElementById(id).value = state.tar[i]);
         if (state.inBag) document.getElementById('inBagHeads').value = state.inBag;
         if (state.vipDaily) document.getElementById('vipDaily').value = state.vipDaily;
         if (state.aoo) document.getElementById('aooPerformance').value = state.aoo;
@@ -649,21 +631,14 @@
         if (state.mtg) document.getElementById('mtgParticipation').value = state.mtg;
         if (state.holiday7k) document.getElementById('holiday7kParticipation').value = state.holiday7k;
         if (state.events) document.getElementById('eventsPace').value = state.events;
-
-        if (state.rssInputs) {
-          document.querySelectorAll('.rss-in').forEach((el, index) => {
-            if (state.rssInputs[index] !== undefined) el.value = state.rssInputs[index];
-          });
-        }
       } catch (err) {
-        console.error("Failed to parse saved state", err);
+        console.error("Failed to parse state", err);
       }
     }
 
     function resetAllData() {
-      if (confirm("Reset all stored commander selections, events, and bag resources?")) {
-        localStorage.removeItem('rok_companion_v3');
-        document.querySelectorAll('.rss-in').forEach(el => el.value = '');
+      if (confirm("Reset stored selections and skill values?")) {
+        localStorage.removeItem('rok_studio_v5');
         document.getElementById('inBagHeads').value = '0';
         document.getElementById('vipDaily').value = '2';
         document.getElementById('aooPerformance').value = '0.71';
@@ -671,20 +646,15 @@
         document.getElementById('mtgParticipation').value = '0.74';
         document.getElementById('holiday7kParticipation').value = '0.39';
         document.getElementById('eventsPace').value = '0.6';
-        selectCommander(COMMANDERS[0]);
+        if (COMMANDERS.length > 0) selectCommander(COMMANDERS[0]);
         initSelects();
         calcSculptures();
-        calcResources();
       }
     }
 
     // App Initialization
     initSelects();
-    renderCodex('all');
-    loadState();
-    calcSculptures();
-    calcResources();
-    document.querySelectorAll('.rss-in').forEach(input => input.addEventListener('input', calcResources));
+    fetchCommanderDatabase();
   </script>
 </body>
 </html>
