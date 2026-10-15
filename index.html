@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoK Commander Expertise & Gold Head Studio</title>
+  <title>RoK Commander Command Center & Expertise Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -26,7 +26,6 @@
   <div class="max-w-6xl mx-auto w-full space-y-6">
 
     <!-- Background Music Audio Element -->
-    <!-- TIP: To use your own music, place an MP3 named 'bgm.mp3' in your GitHub repo and change src to './bgm.mp3' -->
     <audio id="bgMusic" loop preload="auto">
       <source src="lagu-wedding.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
@@ -36,9 +35,9 @@
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-slate-800 gap-3">
       <div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-amber-400 flex items-center gap-2">
-          <i class="fa-solid fa-crown"></i> RoK Commander Expertise Studio
+          <i class="fa-solid fa-crown"></i> RoK Commander Command Center
         </h1>
-        <p class="text-xs text-slate-400 mt-1">Live Google Sheet codex, multi-commander tracking, and Gold Head calculator</p>
+        <p class="text-xs text-slate-400 mt-1">Multi-commander progress tracker, live Google Sheet codex & event roadmap</p>
       </div>
 
       <!-- Action Buttons -->
@@ -54,9 +53,12 @@
       </div>
     </header>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Tabs (Dashboard is Primary) -->
     <div class="flex overflow-x-auto border-b border-slate-800 text-sm font-semibold gap-2 pb-0.5">
-      <button id="tabPlannerBtn" onclick="switchTab('planner')" class="px-4 py-2.5 border-b-2 border-amber-400 text-amber-400 transition flex items-center gap-2 shrink-0">
+      <button id="tabDashboardBtn" onclick="switchTab('dashboard')" class="px-4 py-2.5 border-b-2 border-amber-400 text-amber-400 transition flex items-center gap-2 shrink-0">
+        <i class="fa-solid fa-chart-pie"></i> Dashboard
+      </button>
+      <button id="tabPlannerBtn" onclick="switchTab('planner')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
         <i class="fa-solid fa-calculator"></i> Expertise Planner
       </button>
       <button id="tabCodexBtn" onclick="switchTab('codex')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-2 shrink-0">
@@ -67,8 +69,81 @@
       </button>
     </div>
 
+    <!-- 0. DASHBOARD TAB (PRIMARY HOME VIEW) -->
+    <section id="dashboardTab" class="space-y-6">
+      <!-- Total Commander Rarity Counters -->
+      <div>
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-amber-400"></i> Commander Roster Breakdown
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="card p-4 rounded-xl border border-amber-500/40 bg-gradient-to-br from-slate-900 to-amber-950/20">
+            <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center justify-between">
+              Legendary <i class="fa-solid fa-shield-halved text-amber-400"></i>
+            </span>
+            <div id="dashCountLegendary" class="text-3xl font-extrabold text-slate-100 mt-2">0</div>
+            <span class="text-[10px] text-slate-400">Universal Gold Heads tier</span>
+          </div>
+
+          <div class="card p-4 rounded-xl border border-purple-500/40 bg-gradient-to-br from-slate-900 to-purple-950/20">
+            <span class="text-[11px] font-bold text-purple-400 uppercase tracking-wider flex items-center justify-between">
+              Epic <i class="fa-solid fa-khanda text-purple-400"></i>
+            </span>
+            <div id="dashCountEpic" class="text-3xl font-extrabold text-slate-100 mt-2">0</div>
+            <span class="text-[10px] text-slate-400">Silver/Gold chest tier</span>
+          </div>
+
+          <div class="card p-4 rounded-xl border border-blue-500/40 bg-gradient-to-br from-slate-900 to-blue-950/20">
+            <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider flex items-center justify-between">
+              Elite <i class="fa-solid fa-gem text-blue-400"></i>
+            </span>
+            <div id="dashCountElite" class="text-3xl font-extrabold text-slate-100 mt-2">0</div>
+            <span class="text-[10px] text-slate-400">Gathering & utility</span>
+          </div>
+
+          <div class="card p-4 rounded-xl border border-emerald-500/40 bg-gradient-to-br from-slate-900 to-emerald-950/20">
+            <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center justify-between">
+              Advanced <i class="fa-solid fa-seedling text-emerald-400"></i>
+            </span>
+            <div id="dashCountAdvanced" class="text-3xl font-extrabold text-slate-100 mt-2">0</div>
+            <span class="text-[10px] text-slate-400">Entry gathering</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- In Progress & Top Nearest Accomplishment -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- In-Progress Spotlight (Top 3-5 nearing 100%) -->
+        <div class="card p-5 rounded-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
+            <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-flag-checkered text-amber-400"></i> Nearest to Expertise (Top 5)
+            </h3>
+            <span id="dashInProgressCount" class="text-xs text-slate-400 font-mono">0 active</span>
+          </div>
+          <div id="dashTopProgressList" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Completed / Expertised Wall -->
+        <div class="card p-5 rounded-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
+            <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+              <i class="fa-solid fa-award"></i> Expertised Wall of Honor
+            </h3>
+            <span id="dashCompletedCount" class="text-xs text-emerald-400 font-mono font-bold">0 Completed</span>
+          </div>
+          <p class="text-xs text-slate-400">Commanders whose current skills have reached maximum 5-5-5-5 (Expertise):</p>
+          <div id="dashCompletedList" class="flex flex-wrap gap-2 pt-1 max-h-64 overflow-y-auto">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 1. EXPERTISE & EVENT ACCELERATOR PLANNER -->
-    <section id="plannerTab" class="space-y-6">
+    <section id="plannerTab" class="hidden space-y-6">
       <div class="card p-5 rounded-xl shadow-xl space-y-6">
         
         <!-- Active Commander Banner (Heraldic Vector Crest) -->
@@ -145,7 +220,7 @@
                 <option value="1">VIP 10–11 (1 Head/day)</option>
                 <option value="2" selected>VIP 12–13 (2 Heads/day)</option>
                 <option value="3">VIP 14+ (3 Heads/day)</option>
-                <option value="4">VIP 14+ with daily special bundle (+4 Heads/day)</option>
+                <option value="4">VIP 14+ with daily special bundle (4 Heads/day)</option>
               </select>
             </div>
 
@@ -163,7 +238,7 @@
               <select id="olympiaParticipation" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
                 <option value="0">Skip Olympia (0 Heads)</option>
                 <option value="0.29">Casual exchange (~2 heads / week)</option>
-                <option value="0.71" selected>Full Clear (+2 heads / week)</option>
+                <option value="0.71" selected>Full Clear (5 heads / week)</option>
               </select>
             </div>
 
@@ -172,7 +247,6 @@
               <select id="mtgParticipation" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
                 <option value="0">Skip MTG spending</option>
                 <option value="0.29">7k + 7k gems (10 heads per cycle)</option>
-                <option value="0.74" selected>25k + 7k gems (18 heads per cycle)</option>
                 <option value="0.74" selected>25k + 25k gems (26 heads per cycle)</option>
               </select>
             </div>
@@ -186,11 +260,11 @@
             </div>
 
             <div>
-              <label class="text-slate-300 font-semibold block mb-1">Golden Kingdom, Karuak & MGE Milestones</label>
+              <label class="text-slate-300 font-semibold block mb-1">Golden Kingdom, Karis & MGE Milestones</label>
               <select id="eventsPace" onchange="calcSculptures()" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
                 <option value="0">Ignore casual events</option>
                 <option value="0.30">Moderate participation (~9 heads / month)</option>
-                <option value="0.60" selected>Active clear of events & milestones (~18 heads / month)</option>
+                <option value="0.60" selected>Active clear of dungeons & milestones (~18 heads / month)</option>
               </select>
             </div>
           </div>
@@ -227,7 +301,7 @@
       </div>
     </section>
 
-    <!-- 2. COMMANDER DATABASE CODEX TAB -->
+    <!-- 2. COMMANDER DATABASE CODEX TAB (DUAL FILTERS + COUNTER) -->
     <section id="codexTab" class="hidden space-y-4">
       <div class="card p-5 rounded-xl shadow-xl space-y-4">
         
@@ -236,27 +310,54 @@
             <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
               <i class="fa-solid fa-table text-emerald-400"></i> Connected Google Sheets Codex
             </h2>
-            <p class="text-xs text-slate-400">Synced directly with your sheet. Click any card to switch planner focus.</p>
+            <p class="text-xs text-slate-400">Filter by rarity and combat/troop specializations. Click to open in Planner.</p>
           </div>
           
-          <!-- Search input -->
-          <div class="relative w-full md:w-64">
-            <input type="text" id="codexSearch" oninput="filterAndSearchCodex()" placeholder="Search commander, era..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400 pl-8">
-            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
+          <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2 w-full md:w-auto">
+            <!-- Counter digit of matching commanders -->
+            <span id="codexMatchCount" class="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-amber-400">
+              Showing: 0
+            </span>
+            <!-- Search input -->
+            <div class="relative w-full sm:w-56">
+              <input type="text" id="codexSearch" oninput="filterAndSearchCodex()" placeholder="Search name or era..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400 pl-8">
+              <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
+            </div>
           </div>
         </div>
 
-        <!-- Filter pills -->
-        <div class="flex flex-wrap gap-1.5 text-xs">
-          <button onclick="setFilterRarity('all')" class="codex-flt active bg-slate-700 text-white px-2.5 py-1 rounded">All</button>
-          <button onclick="setFilterRarity('legendary')" class="codex-flt bg-slate-800 text-amber-400 px-2.5 py-1 rounded hover:bg-slate-700">Legendary</button>
-          <button onclick="setFilterRarity('epic')" class="codex-flt bg-slate-800 text-purple-400 px-2.5 py-1 rounded hover:bg-slate-700">Epic</button>
-          <button onclick="setFilterRarity('elite')" class="codex-flt bg-slate-800 text-blue-400 px-2.5 py-1 rounded hover:bg-slate-700">Elite</button>
-          <button onclick="setFilterRarity('advanced')" class="codex-flt bg-slate-800 text-emerald-400 px-2.5 py-1 rounded hover:bg-slate-700">Advanced</button>
+        <!-- Filter 1: Rarity Pills -->
+        <div class="space-y-1.5">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Rarity Tier:</span>
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <button onclick="setFilterRarity('all')" class="codex-rarity-btn active bg-slate-700 text-white px-2.5 py-1 rounded">All</button>
+            <button onclick="setFilterRarity('legendary')" class="codex-rarity-btn bg-slate-800 text-amber-400 px-2.5 py-1 rounded hover:bg-slate-700">Legendary</button>
+            <button onclick="setFilterRarity('epic')" class="codex-rarity-btn bg-slate-800 text-purple-400 px-2.5 py-1 rounded hover:bg-slate-700">Epic</button>
+            <button onclick="setFilterRarity('elite')" class="codex-rarity-btn bg-slate-800 text-blue-400 px-2.5 py-1 rounded hover:bg-slate-700">Elite</button>
+            <button onclick="setFilterRarity('advanced')" class="codex-rarity-btn bg-slate-800 text-emerald-400 px-2.5 py-1 rounded hover:bg-slate-700">Advanced</button>
+          </div>
+        </div>
+
+        <!-- Filter 2: Troop & Specialization Types -->
+        <div class="space-y-1.5 border-t border-slate-800 pt-3">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Troop & Role Specialization:</span>
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <button onclick="setFilterType('all')" class="codex-type-btn active bg-slate-700 text-white px-2.5 py-1 rounded">All Types</button>
+            <button onclick="setFilterType('infantry')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-shield-halved mr-1 text-amber-400"></i>Infantry</button>
+            <button onclick="setFilterType('cavalry')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-horse-head mr-1 text-amber-400"></i>Cavalry</button>
+            <button onclick="setFilterType('archer')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-bullseye mr-1 text-amber-400"></i>Archer</button>
+            <button onclick="setFilterType('leadership')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-chess-rook mr-1 text-amber-400"></i>Leadership</button>
+            <button onclick="setFilterType('engineering')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-gear mr-1 text-amber-400"></i>Engineering</button>
+            <button onclick="setFilterType('integration')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-arrows-split-up-and-left mr-1 text-amber-400"></i>Integration</button>
+            <button onclick="setFilterType('conquering')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-fire mr-1 text-rose-400"></i>Conquering</button>
+            <button onclick="setFilterType('garrison')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-tower-observation mr-1 text-sky-400"></i>Garrison</button>
+            <button onclick="setFilterType('gathering')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-wheat-awn mr-1 text-emerald-400"></i>Gathering</button>
+            <button onclick="setFilterType('peacekeeping')" class="codex-type-btn bg-slate-800 text-slate-300 px-2.5 py-1 rounded hover:bg-slate-700"><i class="fa-solid fa-feather mr-1 text-indigo-400"></i>Peacekeeping</button>
+          </div>
         </div>
 
         <!-- Grid Container -->
-        <div id="commandersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-2">
+        <div id="commandersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-3 border-t border-slate-800">
           <!-- Loaded live from Google Sheet -->
         </div>
       </div>
@@ -317,7 +418,7 @@
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">Champions of Olympia</span>
-              <p class="text-slate-400 mt-1">Weekly 5v5 battle mode. Redeem up to <strong class="text-amber-400">2 Legendary Sculptures per week</strong> from the Olympia shop (104 heads/year).</p>
+              <p class="text-slate-400 mt-1">Weekly 5v5 battle mode. Redeem up to <strong class="text-amber-400">5 Legendary Sculptures per week</strong> from the Olympia shop (260 heads/year).</p>
             </div>
             <div class="bg-slate-900/60 p-3.5 rounded-lg border border-slate-800">
               <span class="font-bold text-slate-200 block text-sm">The Golden Kingdom</span>
@@ -337,19 +438,19 @@
 
   <!-- Non-commercial fan tool disclaimer -->
   <footer class="text-center text-[11px] text-slate-500 pt-10 pb-4 max-w-6xl mx-auto w-full">
-    Rise of Kingdoms is a trademark of Lilith Games. This studio is an unofficial, non-commercial fan utility tool.
+    Rise of Kingdoms is a trademark of Lilith Games. This command center is an unofficial, non-commercial fan utility tool.
   </footer>
 
   <script>
     const UPGRADE_COSTS = [10, 10, 15, 15, 30, 30, 40, 40, 45, 45, 50, 50, 75, 75, 80, 80];
 
-    // Your linked Google Sheet ID and Sheet Name
     const GOOGLE_SHEET_ID = '1o_EB9MoSUwQkt3h3-jQl7zPOiOB43GnrudC_2ClRrXk';
     const SHEET_TAB_NAME = 'commander'; 
 
     let COMMANDERS = [];
     let currentSelectedCommander = null;
     let activeRarityFilter = 'all';
+    let activeTypeFilter = 'all';
 
     // MULTI-COMMANDER MEMORY DICTIONARY
     let commanderProgressMap = {};
@@ -392,6 +493,7 @@
 
     function switchTab(tabName) {
       const tabs = {
+        dashboard: { section: 'dashboardTab', btn: 'tabDashboardBtn' },
         planner: { section: 'plannerTab', btn: 'tabPlannerBtn' },
         codex: { section: 'codexTab', btn: 'tabCodexBtn' },
         events: { section: 'eventsTab', btn: 'tabEventsBtn' }
@@ -415,6 +517,10 @@
           activeBtn.className = "px-4 py-2.5 border-b-2 border-amber-400 text-amber-400 transition flex items-center gap-2 shrink-0";
         }
       }
+
+      if (tabName === 'dashboard') {
+        renderDashboard();
+      }
     }
 
     // Helper: Select archetype vector icons based on unit classification
@@ -425,7 +531,11 @@
       if (t.includes('archer')) return 'fa-bullseye';
       if (t.includes('gathering')) return 'fa-wheat-awn';
       if (t.includes('peacekeeping')) return 'fa-feather';
-      if (t.includes('conquering') || t.includes('leadership')) return 'fa-chess-rook';
+      if (t.includes('engineering')) return 'fa-gear';
+      if (t.includes('integration')) return 'fa-arrows-split-up-and-left';
+      if (t.includes('garrison')) return 'fa-tower-observation';
+      if (t.includes('conquering')) return 'fa-fire';
+      if (t.includes('leadership')) return 'fa-chess-rook';
       return 'fa-crown';
     }
 
@@ -458,25 +568,144 @@
           throw new Error('Empty sheet data');
         }
       } catch (err) {
-        console.warn("Using offline fallbacks. Ensure sheet is set to 'Anyone with link can view':", err);
+        console.warn("Using offline fallbacks:", err);
         COMMANDERS = [
           { name: "Alexander the Great", rarity: "legendary", type: "Infantry / Attack", generation: "KvK 2" },
           { name: "Scipio Africanus Prime", rarity: "legendary", type: "Infantry / Skill", generation: "Season of Conquest" },
           { name: "Alexander Nevsky", rarity: "legendary", type: "Cavalry / Skill", generation: "Season of Conquest" },
           { name: "Joan of Arc Prime", rarity: "legendary", type: "Cavalry / Support", generation: "Season of Conquest" },
+          { name: "Boudica Prime", rarity: "legendary", type: "Archer / Skill", generation: "Season of Conquest" },
           { name: "Sun Tzu", rarity: "epic", type: "Infantry / Skill", generation: "Starting / Kingdom" },
-          { name: "Constance", rarity: "elite", type: "Gathering", generation: "Kingdom" }
+          { name: "Baibars", rarity: "epic", type: "Cavalry / Skill", generation: "Starting / Kingdom" },
+          { name: "Constance", rarity: "elite", type: "Gathering", generation: "Kingdom" },
+          { name: "Centurion", rarity: "advanced", type: "Gathering", generation: "Kingdom" }
         ];
       }
 
       loadState();
       
       const defaultCmd = currentSelectedCommander || COMMANDERS[0];
-      selectCommander(defaultCmd);
+      selectCommander(defaultCmd, false);
       renderCodex();
+      renderDashboard();
       calcSculptures();
     }
 
+    // DASHBOARD RENDERING LOGIC
+    function renderDashboard() {
+      // 1. Calculate Rarity Totals
+      let counts = { legendary: 0, epic: 0, elite: 0, advanced: 0 };
+      COMMANDERS.forEach(c => {
+        if (counts[c.rarity] !== undefined) counts[c.rarity]++;
+      });
+
+      document.getElementById('dashCountLegendary').textContent = counts.legendary;
+      document.getElementById('dashCountEpic').textContent = counts.epic;
+      document.getElementById('dashCountElite').textContent = counts.elite;
+      document.getElementById('dashCountAdvanced').textContent = counts.advanced;
+
+      // 2. Classify Progress: In Progress vs Completed
+      let completedList = [];
+      let inProgressList = [];
+
+      COMMANDERS.forEach(cmd => {
+        const saved = commanderProgressMap[cmd.name];
+        if (!saved) return;
+
+        const curTotal = (saved.cur[0] - 1) + (saved.cur[1] - 1) + (saved.cur[2] - 1) + (saved.cur[3] - 1);
+        const isCurrentMax = (saved.cur[0] === 5 && saved.cur[1] === 5 && saved.cur[2] === 5 && saved.cur[3] === 5);
+
+        if (isCurrentMax) {
+          completedList.push(cmd);
+        } else {
+          // Check percentage completed towards expertise (16 total upgrades)
+          const pct = Math.round((curTotal / 16) * 100);
+          if (curTotal > 0) {
+            inProgressList.push({
+              cmd: cmd,
+              cur: saved.cur,
+              tar: saved.tar,
+              curTotal: curTotal,
+              pct: pct
+            });
+          }
+        }
+      });
+
+      // Sort In-Progress descending by percentage (closest to 100% first)
+      inProgressList.sort((a, b) => b.pct - a.pct);
+
+      // Render In-Progress List (Top 5)
+      const topListContainer = document.getElementById('dashTopProgressList');
+      topListContainer.innerHTML = '';
+      document.getElementById('dashInProgressCount').textContent = `${inProgressList.length} active`;
+
+      if (inProgressList.length === 0) {
+        topListContainer.innerHTML = `
+          <div class="py-6 text-center text-xs text-slate-500">
+            No commanders currently in progress. Go to Planner or Codex to configure skills!
+          </div>
+        `;
+      } else {
+        const top5 = inProgressList.slice(0, 5);
+        top5.forEach(item => {
+          const colors = getRarityColors(item.cmd.rarity);
+          const icon = getTroopIcon(item.cmd.type);
+          const row = document.createElement('div');
+          row.className = "p-3 rounded-lg bg-slate-900/80 border border-slate-700/70 hover:border-amber-400/50 transition cursor-pointer flex items-center justify-between gap-3";
+          row.onclick = () => selectCommander(item.cmd, true);
+
+          row.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full border ${colors.border} ${colors.bg} ${colors.text} flex items-center justify-center text-sm shrink-0">
+                <i class="fa-solid ${icon}"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200 line-clamp-1">${item.cmd.name}</h4>
+                <span class="text-[10px] text-slate-400 font-mono">${item.cur.join('-')} → ${item.tar.join('-')}</span>
+              </div>
+            </div>
+            <div class="text-right shrink-0 w-28">
+              <span class="text-xs font-bold text-amber-400">${item.pct}%</span>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1 border border-slate-700">
+                <div class="bg-amber-400 h-full" style="width: ${item.pct}%"></div>
+              </div>
+            </div>
+          `;
+          topListContainer.appendChild(row);
+        });
+      }
+
+      // Render Completed List
+      const completedListContainer = document.getElementById('dashCompletedList');
+      completedListContainer.innerHTML = '';
+      document.getElementById('dashCompletedCount').textContent = `${completedList.length} Expertised`;
+
+      if (completedList.length === 0) {
+        completedListContainer.innerHTML = `
+          <div class="py-6 text-center text-xs text-slate-500 w-full">
+            No commanders marked as 5-5-5-5 yet. Set current skills to 5-5-5-5 in Planner to honor them here!
+          </div>
+        `;
+      } else {
+        completedList.forEach(cmd => {
+          const colors = getRarityColors(cmd.rarity);
+          const icon = getTroopIcon(cmd.type);
+          const pill = document.createElement('div');
+          pill.className = `px-3 py-1.5 rounded-lg border ${colors.border} ${colors.bg} flex items-center gap-2 cursor-pointer hover:scale-105 transition`;
+          pill.onclick = () => selectCommander(cmd, true);
+
+          pill.innerHTML = `
+            <i class="fa-solid ${icon} ${colors.text} text-xs"></i>
+            <span class="text-xs font-semibold text-slate-200">${cmd.name}</span>
+            <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1 py-0.2 rounded font-bold font-mono">EXP</span>
+          `;
+          completedListContainer.appendChild(pill);
+        });
+      }
+    }
+
+    // CODEX FILTER & RENDER
     function renderCodex() {
       const container = document.getElementById('commandersGrid');
       container.innerHTML = '';
@@ -484,12 +713,22 @@
 
       const filtered = COMMANDERS.filter(cmd => {
         const matchesRarity = activeRarityFilter === 'all' || cmd.rarity === activeRarityFilter;
+        
+        let matchesType = true;
+        if (activeTypeFilter !== 'all') {
+          const t = (cmd.type || '').toLowerCase();
+          matchesType = t.includes(activeTypeFilter);
+        }
+
         const matchesQuery = !query || cmd.name.toLowerCase().includes(query) || (cmd.generation && cmd.generation.toLowerCase().includes(query)) || cmd.type.toLowerCase().includes(query);
-        return matchesRarity && matchesQuery;
+        return matchesRarity && matchesType && matchesQuery;
       });
 
+      // Update digit counter on tab
+      document.getElementById('codexMatchCount').textContent = `Showing: ${filtered.length} / ${COMMANDERS.length}`;
+
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-slate-500">No commanders found matching search.</div>';
+        container.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-slate-500">No commanders found matching selected filters.</div>';
         return;
       }
 
@@ -500,17 +739,18 @@
 
         const card = document.createElement('div');
         card.className = `bg-slate-900/80 border ${borderClass} rounded-xl p-2.5 flex flex-col items-center text-center cursor-pointer hover:bg-slate-800 hover:scale-[1.02] transition duration-150 relative`;
-        card.onclick = () => selectCommander(cmd);
+        card.onclick = () => selectCommander(cmd, true);
 
         // Saved progress indicator badge
         const savedProgress = commanderProgressMap[cmd.name];
         let progressBadgeHtml = '';
         if (savedProgress) {
-          const tarStr = savedProgress.tar.join('');
-          const isExp = tarStr === '5555';
+          const curStr = savedProgress.cur.join('-');
+          const tarStr = savedProgress.tar.join('-');
+          const isExp = savedProgress.cur.every(v => v === 5);
           progressBadgeHtml = `
-            <div class="mt-1.5 px-1.5 py-0.5 rounded text-[9px] font-mono ${isExp ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30' : 'bg-slate-800 text-slate-300 border border-slate-700'}">
-              ${isExp ? 'Target: Exp' : `${savedProgress.cur.join('-')} →${savedProgress.tar.join('-')}`}
+            <div class="mt-1.5 px-1.5 py-0.5 rounded text-[9px] font-mono ${isExp ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30' : 'bg-slate-800 text-slate-300 border border-slate-700'}">
+              ${isExp ? 'Expertised' : `${curStr} →${tarStr}`}
             </div>
           `;
         }
@@ -540,7 +780,16 @@
 
     function setFilterRarity(rarity) {
       activeRarityFilter = rarity;
-      document.querySelectorAll('.codex-flt').forEach(b => {
+      document.querySelectorAll('.codex-rarity-btn').forEach(b => {
+        b.classList.remove('active', 'bg-slate-700', 'text-white');
+      });
+      event.target.classList.add('active', 'bg-slate-700', 'text-white');
+      renderCodex();
+    }
+
+    function setFilterType(type) {
+      activeTypeFilter = type;
+      document.querySelectorAll('.codex-type-btn').forEach(b => {
         b.classList.remove('active', 'bg-slate-700', 'text-white');
       });
       event.target.classList.add('active', 'bg-slate-700', 'text-white');
@@ -551,8 +800,7 @@
       renderCodex();
     }
 
-    // Loads commander and their respective progress memory
-    function selectCommander(cmd) {
+    function selectCommander(cmd, switchToPlanner = true) {
       if (!cmd) return;
       currentSelectedCommander = cmd;
 
@@ -561,7 +809,6 @@
       document.getElementById('activeCmdEra').textContent = cmd.generation || '';
       document.getElementById('activeCmdRarity').textContent = cmd.rarity.toUpperCase();
       
-      // Update Banner Heraldry
       const colors = getRarityColors(cmd.rarity);
       const iconClass = getTroopIcon(cmd.type);
       const wrap = document.getElementById('activeCmdAvatarWrap');
@@ -584,7 +831,9 @@
         document.getElementById('tarS4').value = "5";
       }
 
-      switchTab('planner');
+      if (switchToPlanner) {
+        switchTab('planner');
+      }
       calcSculptures();
     }
 
@@ -663,7 +912,6 @@
     function saveState() {
       if (!currentSelectedCommander) return;
 
-      // Update independent memory for this commander
       commanderProgressMap[currentSelectedCommander.name] = {
         cur: [
           parseInt(document.getElementById('curS1').value),
@@ -691,11 +939,11 @@
         events: document.getElementById('eventsPace').value
       };
 
-      localStorage.setItem('rok_final_studio_v7', JSON.stringify(globalState));
+      localStorage.setItem('rok_command_center_v8', JSON.stringify(globalState));
     }
 
     function loadState() {
-      const raw = localStorage.getItem('rok_final_studio_v7');
+      const raw = localStorage.getItem('rok_command_center_v8');
       if (!raw) return;
       try {
         const state = JSON.parse(raw);
@@ -719,8 +967,8 @@
     }
 
     function resetAllData() {
-      if (confirm("Reset stored progress memory for ALL commanders and inventory?")) {
-        localStorage.removeItem('rok_final_studio_v7');
+      if (confirm("Reset ALL stored commander progress memory and bag sculptures?")) {
+        localStorage.removeItem('rok_command_center_v8');
         commanderProgressMap = {};
         document.getElementById('inBagHeads').value = '0';
         document.getElementById('vipDaily').value = '2';
@@ -729,8 +977,9 @@
         document.getElementById('mtgParticipation').value = '0.74';
         document.getElementById('holiday7kParticipation').value = '0.39';
         document.getElementById('eventsPace').value = '0.6';
-        if (COMMANDERS.length > 0) selectCommander(COMMANDERS[0]);
+        if (COMMANDERS.length > 0) selectCommander(COMMANDERS[0], false);
         renderCodex();
+        renderDashboard();
         calcSculptures();
       }
     }
